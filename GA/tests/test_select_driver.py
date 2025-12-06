@@ -29,7 +29,7 @@ def test_select_output_structure():
         "random_state": 42,
     }
 
-    result = select(X, y, params)
+    result = select(X, y, **params)
 
     assert isinstance(result, dict)
     for key in ("best_chromosome", "selected_vars",
@@ -60,8 +60,8 @@ def test_select_reproducibility_with_seed():
         "random_state": 123,
     }
 
-    res1 = select(X, y, params)
-    res2 = select(X, y, params)
+    res1 = select(X, y, **params)
+    res2 = select(X, y, **params)
 
     assert np.array_equal(res1["best_chromosome"], res2["best_chromosome"])
     assert res1["best_fitness"] == res2["best_fitness"]
