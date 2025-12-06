@@ -1,5 +1,5 @@
 import numpy as np
-from project.crossover import crossover_population
+from GA.crossover import crossover_population
 
 
 def test_crossover_preserves_shape_and_binary():

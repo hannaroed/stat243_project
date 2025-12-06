@@ -1,5 +1,5 @@
 import numpy as np
-from project.fitness import evaluate_population_fitness
+from GA.fitness import evaluate_population_fitness
 
 
 def generate_toy_data(rng, n_samples=80, n_features=5):

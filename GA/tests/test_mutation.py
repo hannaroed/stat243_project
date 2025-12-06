@@ -1,5 +1,5 @@
 import numpy as np
-from project.mutation import mutate_population
+from GA.mutation import mutate_population
 
 
 def test_mutation_preserves_shape_and_binary_values():

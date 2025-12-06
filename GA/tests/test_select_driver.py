@@ -1,5 +1,5 @@
 import numpy as np
-from project.select import select
+from GA.select import select
 
 
 def toy_regression_data(seed=0, n_samples=60, n_features=6):

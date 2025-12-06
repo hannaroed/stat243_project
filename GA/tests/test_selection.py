@@ -1,5 +1,5 @@
 import numpy as np
-from project.selection import select_parents
+from GA.selection import select_parents
 
 
 def test_select_parents_shape_and_membership():

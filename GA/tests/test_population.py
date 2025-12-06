@@ -1,5 +1,5 @@
 import numpy as np
-from project.population import initialize_population
+from GA.population import initialize_population
 
 
 def test_initialize_population_shape_and_binary_values():
