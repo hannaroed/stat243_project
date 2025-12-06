@@ -20,24 +20,18 @@ def evaluate_population_fitness(population, X, y, cv, lambda_penalty, rng):
             continue
 
         X_sub = X[:, selected]                  # chose only selected columns of X 
-        preds = np.zeros_like(y, dtype=float)
+        r2_scores = np.zeros(cv)
 
-        for train_idx, test_idx in kf.split(X_sub): # split into training and testing data
+        for fold_idx, (train_idx, test_idx) in enumerate(kf.split(X_sub)): # split into training and testing data
             model = LinearRegression()
             model.fit(X_sub[train_idx], y[train_idx])
-            preds[test_idx] = model.predict(X_sub[test_idx])
+            preds = model.predict(X_sub[test_idx])
+            r2_scores[fold_idx] = r2_score(y[test_idx], preds)
 
-        # Compute R2 loss 
-        ss_res = np.sum((y - preds) ** 2)           #sum of squared prediction errors
-        ss_tot = np.sum((y - np.mean(y)) ** 2)      #total variability around the mean
-        r2 = 1 - ss_res / ss_tot                    #How much variability did this model explain?
+        # Compute average R2 across folds
+        r2 = np.mean(r2_scores)
 
         penalty = lambda_penalty * (len(selected) / X.shape[1])
-        fitness[i] = r2 - penalty                   #totla fitness
+        fitness[i] = r2 - penalty                   #total fitness
 
     return fitness
-
-
-
-
-        
