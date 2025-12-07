@@ -10,7 +10,7 @@ from dask import delayed, compute
 
 def _make_estimator(model_type="linear", model_kwargs=None):
     """
-    Factory for prediction models used in fitness evaluation.
+    Creates estimator based on specified model type, with linear regression as default.
 
     Parameters
     ----------
@@ -40,7 +40,6 @@ def _make_estimator(model_type="linear", model_kwargs=None):
     elif model_type == "elasticnet":
         return ElasticNet(**model_kwargs)
     elif model_type == "rf":
-        # Reasonable defaults; user can override via model_kwargs
         default_kwargs = {"n_estimators": 100}
         # model_kwargs overrides defaults where specified
         default_kwargs.update(model_kwargs)
@@ -61,7 +60,7 @@ def _chromosome_fitness(chrom, X, y, folds, lambda_penalty,
     X_sub = X[:, selected]
     r2_scores = []
 
-    # Build model once per chromosome; refit inside each fold
+    # Build model once per chromosome: refit inside each fold
     for train_idx, test_idx in folds:
         X_train, X_test = X_sub[train_idx], X_sub[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
@@ -91,10 +90,10 @@ def evaluate_population_fitness(population, X, y, cv, lambda_penalty, rng,
     cv : int
         Number of CV folds.
     lambda_penalty : float
-        Penalty weight λ; penalized fitness is R^2 - λ f where
+        Penalty weight λ, penalized fitness is R^2 - λ f where
         f is the fraction of selected predictors.
     rng : np.random.RandomState
-        Not used directly here but kept for API compatibility.
+        Not in use yet.
     model_type : str, default="linear"
         See _make_estimator docstring.
     model_kwargs : dict or None

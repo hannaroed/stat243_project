@@ -92,7 +92,6 @@ def main():
         random_state=11,
         feature_names=feature_names,
         model_type=model_type,
-        # optionally: model_kwargs={"alpha": 1.0} for ridge/lasso, etc.
         model_kwargs=None
     )
 
