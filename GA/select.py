@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 from .population import initialize_population
 from .fitness import evaluate_population_fitness
 from .selection import select_parents
@@ -45,7 +46,7 @@ def select(X, y, n_pop=50, n_gen=50, mutation_rate=0.01,
 
     fitness_history = []
 
-    for gen in range(n_gen):
+    for gen in tqdm(range(n_gen), desc="GA generations", unit="gen"):
 
         # Evaluate Fitness ------------------------------------------------------
         fitness = evaluate_population_fitness(population, X, y, cv, lambda_penalty, rng)
