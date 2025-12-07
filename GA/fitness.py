@@ -11,7 +11,14 @@ def evaluate_population_fitness(population, X, y, cv, lambda_penalty, rng):
 
     fitness = np.zeros(n_pop)   #preallcoate fitness score
 
-    kf = KFold(n_splits=cv, shuffle=True, random_state=rng)
+    #kf = KFold(n_splits=cv, shuffle=True, random_state=rng)
+    # NOTE:
+    # We do NOT shuffle folds here.
+    # Shuffling introduces randomness into the train/test splits,
+    # which caused identical chromosomes to receive different fitness scores.
+    # Removing shuffle ensures deterministic splits, so identical chromosomes
+    # always produce identical R2 values — resolving the failing unit test.
+    kf = KFold(n_splits=cv)
 
     for i, chrom in enumerate(population):
         selected = np.where(chrom == 1)[0]  # indeces of features included by this chromosome 
