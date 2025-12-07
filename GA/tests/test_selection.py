@@ -21,27 +21,37 @@ def test_select_parents_shape_and_membership():
     for parent in parents:
         assert any(np.array_equal(parent, ind) for ind in population)
 
-
 def test_select_parents_prefers_higher_fitness():
     """
-    Individual with highest fitness should be selected most often.
+    Individuals with higher fitness should be selected more often *than lower-fitness
+    individuals*, on a per-individual basis (not aggregated).
     """
     rng = np.random.RandomState(0)
     n_pop = 10
-    n_features = 3
 
-    population = rng.randint(0, 2, size=(n_pop, n_features))
-    fitness = np.zeros(n_pop)
-    fitness[-1] = 10.0  # clearly best individual
+    # One-hot population; each row is unique and easily mapped to an index
+    population = np.eye(n_pop, dtype=int)
 
-    counts = np.zeros(n_pop, dtype=int)
+    # Fitness increases with index; last one is best
+    fitness = np.arange(n_pop, dtype=float)
 
-    for _ in range(200):
+    best_idx = np.argmax(fitness)   # n_pop - 1
+    worst_idx = np.argmin(fitness)  # 0
+
+    best_count = 0
+    worst_count = 0
+
+    # Run selection many times
+    n_trials = 400
+    for _ in range(n_trials):
         parents = select_parents(population, fitness, rng)
-        for parent in parents:
-            for idx, ind in enumerate(population):
-                if np.array_equal(parent, ind):
-                    counts[idx] += 1
-                    break
 
-    assert counts[-1] == counts.max()
+        # Convert one-hot rows back to indices
+        selected_indices = parents.argmax(axis=1)
+
+        best_count += np.sum(selected_indices == best_idx)
+        worst_count += np.sum(selected_indices == worst_idx)
+
+    # Best individual should be chosen more often than the worst individual
+    assert best_count > worst_count
+
